@@ -1,0 +1,10 @@
+{
+  "name": "acquired-taste",
+  "description": "Makes AI-built websites better: premium, original and finished. One design skill for landing pages, shops, app screens, dashboards and local-business sites, with an executed review loop.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ieuan Howells"
+  },
+  "license": "MIT",
+  "keywords": ["design", "frontend", "website", "landing-page", "dashboard", "ui", "anti-slop"]
+}

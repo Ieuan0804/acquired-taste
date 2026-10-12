@@ -1,0 +1,45 @@
+# Runs the plugin's own self-tests on Linux, macOS and Windows (Windows as the known-good control).
+# Started by hand from the Actions tab (or `gh workflow run self-tests.yml`), so it never uses the
+# free allowance in the background. It can't run a full Claude Code session or image generation
+# (no Claude or ChatGPT sign-in here); it checks every script those sessions rely on.
+name: Self-tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the plugin's packages
+        run: npm ci
+      - name: Install the review browser
+        run: npx playwright install --with-deps chromium
+      - name: Setup check (Codex is expected to be missing here)
+        continue-on-error: true
+        run: node scripts/setup.mjs
+      - name: Working folder kept out of git
+        continue-on-error: true
+        run: node dev/test-workdir.mjs
+      - name: Sign-in for review and try
+        continue-on-error: true
+        run: node dev/test-login.mjs
+      - name: Journey tool
+        continue-on-error: true
+        run: node dev/test-journeys.mjs
+      - name: Starter project, motion blocks, safe server start and stop
+        continue-on-error: true
+        run: node dev/test-blocks.mjs
+      - name: Font search
+        continue-on-error: true
+        run: node scripts/fonts.mjs search --tags calm,business --category sans

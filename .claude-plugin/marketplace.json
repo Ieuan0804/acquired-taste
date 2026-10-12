@@ -1,0 +1,15 @@
+{
+  "name": "acquired-taste",
+  "description": "Acquired Taste: makes AI-built websites better.",
+  "owner": {
+    "name": "Ieuan Howells"
+  },
+  "plugins": [
+    {
+      "name": "acquired-taste",
+      "description": "Makes AI-built websites better: premium, original and finished.",
+      "version": "1.0.0",
+      "source": "./"
+    }
+  ]
+}

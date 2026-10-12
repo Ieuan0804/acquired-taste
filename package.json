@@ -1,0 +1,11 @@
+{
+  "name": "acquired-taste",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Scripts for the Acquired Taste Claude Code plugin (review loop, safe server runner).",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "1.64.0"
+  }
+}
