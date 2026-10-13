@@ -9,7 +9,7 @@ You are building a website someone would be proud to launch. Plain Opus already 
 
 Work through the steps in order. Files mentioned are relative to this skill's folder; scripts are in the plugin's `scripts/` folder (two levels up from this file).
 
-**Change files only with your file-writing and file-editing tools**: any file, including your own notes and scripts. Never use shell find-and-replace or heredocs (`sed -i`, PowerShell `-replace`, `cat > file <<EOF`, inline Python): backslashes, `$` and backticks get mangled silently, and runs that did it lost time repairing files.
+**Change files only with your file-writing and file-editing tools**: any file, including your own notes and scripts, quick one-off fixes and the same change across many files (edit each one). Never use shell find-and-replace, heredocs or a script that edits files (`sed -i`, PowerShell `-replace`, `cat > file <<EOF`, inline Python or Node): backslashes, `$` and backticks get mangled silently, and a script edit can do nothing without saying so (a real run lost time this way). If an edit fails, retry with the file-editing tool, never with a script.
 
 **If a tool or browser the plugin needs is missing or won't start, never work around it on the machine.** Don't fake, move or link browser folders, don't write to system folders (`/opt`, `/usr`, `C:\Program Files` and the like), and don't install system packages unasked. Run the setup check (`node scripts/setup.mjs`), then tell the user plainly what's missing and the fix it prints. Without a working browser, build the site anyway and say clearly in the hand-over that the browser checks didn't run.
 
@@ -103,7 +103,7 @@ Follow `craft/review.md`: start the site with the plugin's server script, run th
 
 Tell the user:
 - what you built and how to run it (also write `HOW-TO-RUN.md`)
-- every assumption you made and anything they must replace (placeholder images, draft quotes)
+- every assumption you made and anything they must replace or fill in (placeholder images, draft quotes, every marked gap for a fact the brief didn't give)
 - what the review checked and the final result, including any screens it couldn't check because they need a sign-in you didn't have
 - **show it:** if you can open a browser panel beside the chat (Claude's desktop app has a preview tool that opens a URL), leave the finished production site running and open it there, and say it's running and how to stop it (`node "PLUGIN/scripts/serve.mjs" stop`). Always give its plain link too (`http://localhost:<port>`), and say "if the browser panel is closed, click the globe icon at the top right": the panel can be hidden even when the page loaded in it. In a terminal-only or headless session, stop the server as usual.
 - then ask: "Keep this direction (fonts, palette, layout)?" and note their answer in `.acquired-taste/decisions.md`

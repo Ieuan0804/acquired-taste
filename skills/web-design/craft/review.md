@@ -127,6 +127,7 @@ It shows the top of the page over ~3 seconds (entrance and ambient motion), the 
 **Every type, first:**
 - Does it look like the style the brief asked for? Would the brief's author recognise it on the first screen?
 - Does anything (images, illustrations, layout) look like another brand's signature look? If so, it's a bug, not a style choice: fix it.
+- At phone size, can you read a price, a card title and a button at a glance? If the display face makes them shouty or hard to read, use the body face there (`craft/type.md`; bold faces stay where they read well).
 - Rows and panels that scroll sideways or inside the page: no plain grey browser scrollbar (Windows shows arrows and a grey track). Style it to match the design, or hide it and keep a visible "scroll for more" cue.
 
 **Marketing pages (landing, shop, local business):**

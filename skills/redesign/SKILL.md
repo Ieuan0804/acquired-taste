@@ -9,7 +9,7 @@ You're redesigning something that already works and that people may rely on. The
 
 The design craft lives in the web-design skill. Paths below like `../web-design/craft/review.md` are relative to this skill's folder. PLUGIN is the plugin root, two folders above this skill's base directory.
 
-Keep the user posted with one short line per step, as in web-design. Change files only with your file-writing and file-editing tools, including your own scripts; never shell find-and-replace (`sed -i`, `-replace`, heredocs), which mangles backslashes and `$` silently. If a tool or browser the plugin needs is missing, never work around it on the machine (no faked or linked browser folders, nothing written to system folders, no system installs unasked): run `node "PLUGIN/scripts/setup.mjs"` and tell the user what's missing and the fix it prints.
+Keep the user posted with one short line per step, as in web-design. Change files only with your file-writing and file-editing tools, including your own scripts, quick one-off fixes and the same change across many files (edit each one); never shell find-and-replace or a script that edits files (`sed -i`, `-replace`, heredocs, inline Python or Node), which mangles backslashes and `$` silently or does nothing without saying so. If an edit fails, retry with the file-editing tool, never with a script. If a tool or browser the plugin needs is missing, never work around it on the machine (no faked or linked browser folders, nothing written to system folders, no system installs unasked): run `node "PLUGIN/scripts/setup.mjs"` and tell the user what's missing and the fix it prints.
 
 ## 1. Make it safe (before touching anything)
 

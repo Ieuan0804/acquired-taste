@@ -8,6 +8,7 @@ A site that invents things isn't finished. It's a liability for the business.
 - **Numbers.** Use the user's real figures (users, years, prices, delivery times). Don't add stats to fill a section. If a section needs a number you don't have, make it a different section. **Unreleased or empty things show their status, not zeros:** a game, product or feature that isn't out yet says "Coming soon" or "In development", not "0 visits, 0 likes". Live numbers that can be zero (players online now) need a friendly zero state ("Quiet right now. Be the first in"), not a big 0.
 - **Logos and partners.** No invented "trusted by" logo walls or press mentions.
 - **Credentials.** No awards, certifications, guarantees or legal claims (VAT, insurance, compliance) beyond what the brief states.
+- **Facts about the business.** Opening hours, days, holidays, services, menu items, delivery areas, prices and policies come only from the brief or the business's own material. Never extend them to round a section off (a run added "Bank holidays too" to hours the brief gave; others add free parking, gluten-free options, next-day delivery). If a page needs a fact you don't have, leave a clearly marked gap ("Add your bank holiday hours here") and list every gap in the hand-over.
 
 ## Real data that's messy
 

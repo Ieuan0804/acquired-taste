@@ -36,6 +36,8 @@ node "PLUGIN/scripts/fonts.mjs" specimen --headline "<the real headline>" --body
 
 Open the sheet. Check the headline's character, how the pairing reads together, the body at reading size, and the £ € é line for missing characters. **With a logo or a described wordmark, the headlines must look like they belong with it** (it doesn't have to be the same font: matching weight, width or attitude is enough). Put the logo beside the headline on the sheet in your head: if one is squeezed narrow and the other stretched wide, they'll clash on every page. A set-in-type wordmark stays readable at header size; never squeeze it until the letters crowd. Pick the best fit; if the memory's recently used font is genuinely the best, you may pick it, and say why. Show the sheet at the checkpoint with your pick marked; the user chooses.
 
+**Bold display faces are welcome; make sure they still read small.** A characterful display face carries the big headlines. Wherever else it appears (prices, card titles, small headings, buttons, labels), it must read at a glance at phone size. Many expressive faces do; heavy, extended or decorative ones often turn shouty or hard to read at 14-20px (a run set every price in a heavy extended face, and the prices got harder to read). When it doesn't read well small, use the body face there and keep the display face for the moments it's made for. This is a readability check, not a limit on bold choices.
+
 ## Install
 
 ```bash
