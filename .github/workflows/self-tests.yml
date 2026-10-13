@@ -31,6 +31,9 @@ jobs:
       - name: Browser fallbacks (Playwright's own, installed Chrome, older builds, clear message)
         continue-on-error: true
         run: node dev/test-browser.mjs
+      - name: Review checks (dark mode, hidden content, drawings, wraps, expected 404, hidden radios)
+        continue-on-error: true
+        run: node dev/test-review.mjs
       - name: Working folder kept out of git
         continue-on-error: true
         run: node dev/test-workdir.mjs

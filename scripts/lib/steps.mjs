@@ -212,7 +212,28 @@ export async function runStep(page, baseUrl, step, outDir, vars = {}) {
     if (!found.el && action === "check") { const el = await clickable(page, t); if (el) found = { el, how: "" }; }
     if (!found.el) throw new Error(found.why);
     if (action === "fill") await found.el.fill(value);
-    else if (action === "check") { await found.el.check({ timeout: 5000 }); await settle(page, since); }
+    else if (action === "check") {
+      // Styled radios and checkboxes often hide the real box under a card or label (opacity 0,
+      // 1px, or covered), so a direct tick can't land. Click what a person clicks, its label,
+      // then confirm it ticked.
+      await found.el.scrollIntoViewIfNeeded({ timeout: 2000 }).catch(() => {});
+      const already = await found.el.evaluate((el) => el instanceof HTMLInputElement && el.checked).catch(() => false);
+      const covered = !already && await found.el.evaluate((el) => {
+        if (!(el instanceof HTMLInputElement)) return true;
+        const r = el.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2 || getComputedStyle(el).opacity === "0") return true;
+        return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) !== el;
+      }).catch(() => false);
+      const label = covered ? (await found.el.evaluateHandle((el) => el.labels?.[0] ?? el.closest("label"))).asElement() : null;
+      if (label) {
+        await label.click({ timeout: 5000 });
+        const box = await found.el.evaluateHandle((el) => (el instanceof HTMLInputElement ? el : el.closest("label")?.control ?? el.querySelector?.("input")));
+        const ticked = await box.evaluate((b) => !b || b.checked).catch(() => true);
+        if (!ticked) throw new Error(`clicked the label of "${t.text}" but its box didn't tick`);
+        notes.push("ticked by clicking its label (the box itself is hidden)");
+      } else if (!already) await found.el.check({ timeout: 5000 });
+      await settle(page, since);
+    }
     else {
       // By the option's text, then its value, then part of its text, so a miss costs no timeout.
       const options = await found.el.locator("option").evaluateAll((os) => os.map((o) => ({ label: o.label.trim(), value: o.value })));

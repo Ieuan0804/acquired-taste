@@ -30,7 +30,7 @@ Read, don't skim:
 
 ## 3. Capture the "before"
 
-Run the current version and capture every screen in scope at the review widths, in each theme the app has, plus the flows that lead into those screens (`node "PLUGIN/scripts/try.mjs" <url> [--login "<steps>"] ... "shot:name"`). Save them in `.acquired-taste/before/`. Write down the concrete problems you see (hierarchy, density, emphasis, touch targets, states, overflow); those are what the redesign must fix.
+Run the current version and capture every screen in scope at the review widths, in each theme the app has, plus the flows that lead into those screens (`node "PLUGIN/scripts/try.mjs" <url> [--login "<steps>"] ... "shot:name"`). For the screens themselves, `review.mjs <url> /routes... --out .acquired-taste/before` captures every width, and with `--dark "<the steps that switch dark on>"` (or `--dark system`) the dark theme too; never write your own capture script. Save them in `.acquired-taste/before/`. Write down the concrete problems you see (hierarchy, density, emphasis, touch targets, states, overflow); those are what the redesign must fix.
 
 ## 4. Design read and checkpoint
 

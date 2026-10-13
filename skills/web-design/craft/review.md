@@ -40,7 +40,12 @@ It loads every route at each width (several at once), scrolls through, and print
 - text below 12px
 - images with no alt text
 - images shown bigger than their real size (they look soft or pixelated)
-- content still invisible after scrolling (an entrance animation that never fired), including in a pass with reduced motion switched on
+- content still invisible after scrolling (an entrance animation that never fired, one that hides content again once scrolled past, text still slid under a reveal mask, or nearly see-through), including in a pass with reduced motion switched on. It's checked at the moment the full-page screenshot is taken, so a clean report means the screenshot shows it. Decorative watermark text should be `aria-hidden="true"`.
+- text inside drawings and maps (SVG) at the size it's actually drawn: labels overlapping each other, labels cut off at the drawing's edge, captions under 12px (a map scaled down on phones often needs bigger labels or fewer of them there). Labels sitting on top of shapes are for your eye in step 4.
+
+**Dark mode:** if the site has one, add `--dark` with the steps a visitor uses to switch it on (the same steps as `try.mjs`), e.g. `--dark "click:Dark mode"`, or `--dark system` when it only follows the device's setting. Every route is then also checked in dark at the narrowest width and 1440, with `-dark-` screenshots, and it confirms dark really switched on. Never write your own dark-mode capture script. If the switch sits in a phone menu, include opening the menu in the steps.
+
+**Pages meant to be missing:** list them as `/nope=404`. That status is then expected, not a problem; any other status is reported.
 
 It saves top-of-page and full-page screenshots to `.acquired-taste/review/` (you choose which to open, see step 4). **Fix in batches:** collect every reported problem first, then fix them together in as few edits as possible (one edit per file, not one per problem), then run it again until it's clean. **Re-check only what changed:** the first run checks every page at every width; after fixing, re-run with just the routes whose files you changed (`review.mjs <url> /settings /players`), still at every width. If a fix touched anything shared (the layout or app shell, navigation, global CSS or theme tokens, a component used on many pages), re-run every route. The final pass always checks every route at every width. Each separate step re-reads the whole conversation, so twenty one-line fixes cost far more than three grouped ones. 1920 is checked by default, because many desktop monitors are that wide and stretched images often only show there.
 
@@ -97,7 +102,7 @@ click:Save
 node "PLUGIN/scripts/try.mjs" <url> --journeys .acquired-taste/journeys.txt
 ```
 
-- Steps: `goto:/path`, `click:Text`, `fill:Label=value`, `select:Label=Option`, `check:Label`, `press:Enter`, `expect:Text`, `expect-gone:Text`, `expect-url:/part`, `expect-value:Label=value`, `shot:name`. Pick one of several with `(2nd)`, `(last)` or `in "words in the same row"`. Every step waits for what it started to finish loading, so don't add `wait:` steps.
+- Steps: `goto:/path`, `click:Text`, `fill:Label=value`, `select:Label=Option`, `check:Label` (styled radios and checkboxes hidden behind a card are ticked by clicking their label), `press:Enter`, `expect:Text`, `expect-gone:Text`, `expect-url:/part`, `expect-value:Label=value`, `shot:name`. Pick one of several with `(2nd)`, `(last)` or `in "words in the same row"`. Every step waits for what it started to finish loading, so don't add `wait:` steps.
 - **Leave the app as you found it:** give test records `{run}` (a tag unique to each run; `{num}` for number-only fields) and remove them in the journey; anything a journey changes (a name, a setting) is put back under `always:`, which runs even when the journey fails. Screenshots taken after a journey that forgot this show the wrong data.
 - `[signed out]` and `[phone]` start a journey signed out or at phone width; if a journey signs out, the next one signs in again by itself. "Are you sure?" pop-ups are accepted.
 - It prints one line per journey and a summary ("28 of 30 journeys passed"), with the failing step, the reason and a screenshot. **While fixing, rerun only what failed** (`--failed`, or `--only "name|name"`), never the whole file after each fix. **Run them all once more on the final pass**: that full run is never skipped.
