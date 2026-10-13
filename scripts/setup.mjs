@@ -13,6 +13,7 @@ import { tmpdir, homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { findCodex } from "./codex.mjs";
 import { findUpscaler } from "./upscale.mjs";
+import { launchBrowser, browserInfo, NO_BROWSER } from "./lib/browser.mjs";
 
 const PLUGIN = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const withImage = process.argv.includes("--image");
@@ -23,7 +24,7 @@ const cacheFile = join(homedir(), ".acquired-taste", "setup.json");
 if (process.argv.includes("--cached") && existsSync(cacheFile)) {
   const cached = JSON.parse(readFileSync(cacheFile, "utf8"));
   if (Date.now() - cached.at < 12 * 3600 * 1000 && cached.reviewReady) {
-    console.log(`Acquired Taste setup (checked ${Math.round((Date.now() - cached.at) / 60000)} min ago)`);
+    console.log(`Acquired Taste setup: ${cached.imagesReady ? "Ready" : "Ready (pictures off)"} (checked ${Math.round((Date.now() - cached.at) / 60000)} min ago)`);
     console.log(`Review loop: ready\nImage generation: ${cached.imagesReady ? "ready" : "not available, so sites will use code-built visuals and labelled placeholders"}`);
     console.log(`Upscaler: ${findUpscaler() ? "ready" : "not installed (optional; ask the user before: node upscale.mjs --install)"}`);
     process.exit(0);
@@ -45,12 +46,12 @@ try {
   check("Playwright installed in the plugin", false, `npm install --prefix "${PLUGIN}"`);
 }
 if (playwright) {
-  try {
-    const browser = await playwright.chromium.launch();
+  const browser = await launchBrowser(playwright.chromium, {}, { exitOnFail: false });
+  if (browser) {
     await browser.close();
-    check("Browser for the review loop", true);
-  } catch {
-    check("Browser for the review loop", false, `npx --prefix "${PLUGIN}" playwright install chromium`);
+    check(`Browser for the review loop (${browserInfo.label})`, true);
+  } else {
+    check("Browser for the review loop", false, `${NO_BROWSER.split("\n").slice(1).join("\n           ")}\n           Tried: ${browserInfo.errors.join("; ").slice(0, 400)}`);
   }
 }
 
@@ -95,11 +96,18 @@ if (codex) {
 check("Upscaler for sharp large images (optional)", !!findUpscaler(),
   `Ask the user first (one-off ~45 MB download from the official Real-ESRGAN release), then: node "${join(PLUGIN, "scripts", "upscale.mjs")}" --install`);
 
-// Report
-console.log("Acquired Taste setup check\n");
-for (const r of results) console.log(`${r.ok ? "[ok]  " : "[fix] "}${r.name}${r.ok ? "" : `\n       ${r.fix}`}`);
-const reviewReady = results.filter((r) => /Node|Playwright|Browser/.test(r.name)).every((r) => r.ok);
+// Report. Node, Playwright and a browser are needed; images and the upscaler are optional,
+// so a missing optional part is shown as [optional], never as a failure.
+const core = (r) => /Node|Playwright|Browser/.test(r.name);
+const reviewReady = results.filter(core).every((r) => r.ok);
 const imagesReady = results.filter((r) => /Codex|Image/.test(r.name)).every((r) => r.ok);
+const headline = !reviewReady ? "NOT READY: fix the [fix] lines below"
+  : imagesReady ? "Ready" : "Ready (pictures off: sites use code-built visuals and labelled placeholders)";
+console.log(`Acquired Taste setup check: ${headline}\n`);
+for (const r of results) {
+  const tag = r.ok ? "[ok]       " : core(r) ? "[fix]      " : "[optional] ";
+  console.log(`${tag}${r.name}${r.ok ? "" : `\n           ${r.fix}`}`);
+}
 if (reviewReady) {
   mkdirSync(dirname(cacheFile), { recursive: true });
   writeFileSync(cacheFile, JSON.stringify({ at: Date.now(), reviewReady, imagesReady }, null, 2));

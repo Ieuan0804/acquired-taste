@@ -69,6 +69,7 @@
 
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { launchBrowser, browserNoise } from "./lib/browser.mjs";
 import { runStep, parseLogin, signIn, newContext } from "./lib/steps.mjs";
 import { workDir } from "./lib/workdir.mjs";
 
@@ -120,12 +121,12 @@ async function startSignedIn(browser, steps) {
 
 function listen(page, errors) {
   page.on("pageerror", (e) => errors.push(e.message.split("\n")[0]));
-  page.on("console", (m) => m.type() === "error" && !noise(m.text()) && errors.push(m.text().slice(0, 160)));
+  page.on("console", (m) => m.type() === "error" && !noise(m.text()) && !browserNoise(m) && errors.push(m.text().slice(0, 160)));
 }
 
 // One journey from the command line (the original behaviour).
 async function single() {
-  const browser = await chromium.launch();
+  const browser = await launchBrowser(chromium);
   const login = loginArg ? await startSignedIn(browser, loginArg) : null;
   const context = await newContext(browser, login, { viewport: mobile ? PHONE : DESKTOP });
   const page = await context.newPage();
@@ -200,7 +201,7 @@ async function journeys() {
     chosen = spec.list.filter((j) => words.some((w) => j.name.toLowerCase().includes(w)));
   }
 
-  const browser = await chromium.launch();
+  const browser = await launchBrowser(chromium);
   const loginSteps = loginArg ?? spec.login;
   const needsLogin = loginSteps && chosen.some((j) => !j.signedOut);
   let login = needsLogin ? await startSignedIn(browser, loginSteps) : null;

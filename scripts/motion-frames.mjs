@@ -9,6 +9,7 @@
 
 import { mkdirSync } from "node:fs";
 import { dirname, resolve, join } from "node:path";
+import { launchBrowser } from "./lib/browser.mjs";
 import { unmangle } from "./lib/steps.mjs";
 import { workDir } from "./lib/workdir.mjs";
 
@@ -31,7 +32,7 @@ const height = width < 768 ? 844 : 900;
 if (out.startsWith(resolve(".acquired-taste"))) workDir();
 mkdirSync(dirname(out), { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 const page = await browser.newPage({ viewport: { width, height } });
 const frames = [];
 const grab = async (label) => frames.push({ label, data: (await page.screenshot({ type: "jpeg", quality: 60 })).toString("base64") });

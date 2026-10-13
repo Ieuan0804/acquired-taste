@@ -13,6 +13,7 @@
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
+import { launchBrowser, browserNoise } from "./lib/browser.mjs";
 import { fileURLToPath } from "node:url";
 import { availableParallelism } from "node:os";
 import { unmangle, parseLogin, signIn, newContext } from "./lib/steps.mjs";
@@ -75,7 +76,7 @@ const add = (route, width, message) => {
 };
 const screenshots = [];
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 
 // Apps behind a login: sign in once, then open every page with that saved session.
 let login = null;
@@ -100,7 +101,7 @@ async function checkOne({ route, width: w, reduced }) {
     const width = reduced ? `${w} reduced-motion` : w;
     const context = await newContext(browser, login, { viewport: { width: w, height: HEIGHTS[w] ?? Math.round(w * 0.625) }, reducedMotion: reduced ? "reduce" : "no-preference" });
     const page = await context.newPage();
-    page.on("console", (m) => m.type() === "error" && add(route, width, `console error: ${short(m.text())}`));
+    page.on("console", (m) => m.type() === "error" && !browserNoise(m) && add(route, width, `console error: ${short(m.text())}`));
     page.on("pageerror", (e) => add(route, width, `page error: ${short(e.message)}`));
     // Only real resource failures. Frameworks prefetch links in the background and cancel
     // those requests when the page closes (Next.js `?_rsc=`, net::ERR_ABORTED); that's normal.

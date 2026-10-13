@@ -11,6 +11,7 @@
 import { readdirSync, readFileSync, statSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { workDir } from "./lib/workdir.mjs";
 import { join, resolve, extname, basename } from "node:path";
+import { launchBrowser } from "./lib/browser.mjs";
 
 let chromium;
 try {
@@ -40,7 +41,7 @@ const other = files.filter((f) => !images.includes(f) && !fonts.includes(f));
 const mime = { ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp" };
 const dataUrl = (f) => `data:${mime[extname(f).toLowerCase()]};base64,${readFileSync(join(dir, f)).toString("base64")}`;
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 const page = await browser.newPage();
 const report = { folder: dir, images: [], fonts, other };
 

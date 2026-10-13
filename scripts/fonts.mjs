@@ -22,6 +22,7 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
+import { launchBrowser } from "./lib/browser.mjs";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 
@@ -163,7 +164,7 @@ ${pairs.map(([d, b = d], i) => `<div class="card"><div class="label">${i + 1}. $
   try { ({ chromium } = await import("playwright")); } catch {
     console.error(`Playwright isn't installed for Acquired Taste yet: npm install --prefix "${PLUGIN}" && npx --prefix "${PLUGIN}" playwright install chromium`); process.exit(2);
   }
-  const browser = await chromium.launch();
+  const browser = await launchBrowser(chromium);
   const page = await browser.newPage({ viewport: { width: 1400, height: 800 }, deviceScaleFactor: 1 });
   await page.setContent(html, { waitUntil: "networkidle", timeout: 60000 });
   await page.evaluate(() => document.fonts.ready);

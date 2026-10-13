@@ -28,6 +28,9 @@ jobs:
       - name: Setup check (Codex is expected to be missing here)
         continue-on-error: true
         run: node scripts/setup.mjs
+      - name: Browser fallbacks (Playwright's own, installed Chrome, older builds, clear message)
+        continue-on-error: true
+        run: node dev/test-browser.mjs
       - name: Working folder kept out of git
         continue-on-error: true
         run: node dev/test-workdir.mjs

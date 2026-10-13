@@ -85,6 +85,44 @@ Then run the setup check once: type `/acquired-taste:setup` in Claude Code. It i
 
 **Pictures (optional):** install the [Codex CLI](https://github.com/openai/codex) (`npm install -g @openai/codex`), run `codex login` and choose *Sign in with ChatGPT*. It uses your ChatGPT plan (Plus or higher), not an API key and not your Claude usage. Without it, sites use designed visuals made in code and clearly labelled photo spaces.
 
+<details>
+<summary><b>Setup and troubleshooting</b></summary>
+<br>
+
+**What "ready" looks like.** The setup check's first line says **Ready**, **Ready (pictures off)** (everything works; sites use code-made visuals because Codex isn't set up) or **NOT READY** (a `[fix]` line says what's needed). `[optional]` lines are extras you can skip.
+
+**The checking browser.** Setup downloads a copy of Chromium (about 150 MB) from `cdn.playwright.dev`. If your network blocks that (some offices and cloud machines do), Acquired Taste uses an installed **Google Chrome**, **Microsoft Edge** or **Chromium** instead, or any browser you point it at:
+
+```bash
+export ACQUIRED_TASTE_BROWSER=/usr/bin/chromium        # Mac / Linux
+$env:ACQUIRED_TASTE_BROWSER = "C:\path\to\chrome.exe"  # Windows PowerShell
+```
+
+If none of these is possible, sites are still built, but the browser checks can't run, and the hand-over says so.
+
+**Where it lives.** Claude Code keeps the plugin in `~/.claude/plugins/cache/acquired-taste/`. Your saved taste (what you kept and rejected) is in `~/.acquired-taste/`. Each project's working files (screenshots, notes) are in its own `.acquired-taste/` folder, kept out of git.
+
+**Update:**
+
+```bash
+claude plugin marketplace update acquired-taste
+claude plugin update acquired-taste@acquired-taste
+```
+
+Then restart Claude Code.
+
+**Uninstall:**
+
+```bash
+claude plugin uninstall acquired-taste@acquired-taste
+claude plugin marketplace remove acquired-taste
+```
+
+Delete `~/.acquired-taste/` too if you don't want to keep your saved taste.
+
+**Without a chat.** It works headless too, for scripts and automation: `claude -p "Build a website for ..."` builds and checks the site without stopping to ask, using its own picks and noting what it assumed. Headless runs can't approve actions, so give it permission to edit files and run commands (for example `--permission-mode acceptEdits` plus allowed tools, or `bypassPermissions` in a throwaway folder or sandbox).
+</details>
+
 <a id="use"></a>
 ### How to use it
 

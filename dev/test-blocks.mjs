@@ -11,6 +11,7 @@ import { join, resolve, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
+import { launchBrowser, browserNoise } from "../scripts/lib/browser.mjs";
 
 const PLUGIN = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const keep = process.argv.includes("--keep");
@@ -99,13 +100,13 @@ console.log(`Serving at ${url}`);
 const results = [];
 const check = (name, ok, detail = "") => { results.push({ name, ok, detail }); console.log(`${ok ? "ok  " : "FAIL"} ${name}${detail ? `: ${detail}` : ""}`); };
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 try {
   // Desktop, full motion
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("console", (m) => m.type() === "error" && !browserNoise(m) && errors.push(m.text()));
   await page.goto(url, { waitUntil: "load" });
   await page.waitForTimeout(800);
   await page.mouse.move(700, 450);

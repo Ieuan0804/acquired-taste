@@ -7,6 +7,7 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve, basename, extname } from "node:path";
+import { launchBrowser } from "./lib/browser.mjs";
 
 let chromium;
 try {
@@ -44,7 +45,7 @@ const html = `<!doctype html><style>
   figure { margin: 0; } img { width: 100%; display: block; } figcaption { margin-top: 4px; }
 </style><div class="grid">${tiles.join("")}</div>`;
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 const page = await browser.newPage({ viewport: { width: columns * (tile + 12) + 12, height: 400 } });
 await page.setContent(html, { waitUntil: "load" });
 await page.screenshot({ path: out, fullPage: true });

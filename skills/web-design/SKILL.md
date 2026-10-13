@@ -11,6 +11,8 @@ Work through the steps in order. Files mentioned are relative to this skill's fo
 
 **Change files only with your file-writing and file-editing tools**: any file, including your own notes and scripts. Never use shell find-and-replace or heredocs (`sed -i`, PowerShell `-replace`, `cat > file <<EOF`, inline Python): backslashes, `$` and backticks get mangled silently, and runs that did it lost time repairing files.
 
+**If a tool or browser the plugin needs is missing or won't start, never work around it on the machine.** Don't fake, move or link browser folders, don't write to system folders (`/opt`, `/usr`, `C:\Program Files` and the like), and don't install system packages unasked. Run the setup check (`node scripts/setup.mjs`), then tell the user plainly what's missing and the fix it prints. Without a working browser, build the site anyway and say clearly in the hand-over that the browser checks didn't run.
+
 **Keep the user posted.** A build takes a while, and silence feels broken. Post one short line when you start each step and before anything slow (installs, builds, image generation, review passes), saying what's happening and roughly how long. Report review results as they come in ("Review pass 1: 3 problems, mobile overflow in the pricing section and 2 broken images, fixing them"). Keep it to a line or two; save the detail for the hand-over.
 
 ## 1. Existing project?

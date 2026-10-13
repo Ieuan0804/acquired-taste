@@ -11,6 +11,7 @@
 
 import { mkdirSync, writeFileSync, copyFileSync, existsSync } from "node:fs";
 import { join, resolve, basename, extname } from "node:path";
+import { launchBrowser } from "./lib/browser.mjs";
 
 let chromium;
 try {
@@ -29,7 +30,7 @@ if (!args.length) {
 }
 mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await launchBrowser(chromium);
 const results = [];
 const tiles = [];
 
