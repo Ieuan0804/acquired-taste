@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Claude_Code-plugin-6b1d24?style=flat-square" alt="Claude Code plugin">
-  <img src="https://img.shields.io/badge/version-1.0-c9a46a?style=flat-square" alt="Version 1.0">
+  <img src="https://img.shields.io/badge/version-1.1-c9a46a?style=flat-square" alt="Version 1.1">
   <img src="https://img.shields.io/badge/blind_picks-4%2F4-2b2421?style=flat-square" alt="Won 4 of 4 blind picks">
   <img src="https://img.shields.io/badge/licence-MIT-2b2421?style=flat-square" alt="MIT licence">
 </p>
